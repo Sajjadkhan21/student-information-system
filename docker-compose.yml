@@ -1,0 +1,26 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: "RootPass123!"
+      MYSQL_DATABASE: sis
+      MYSQL_USER: sis_user
+      MYSQL_PASSWORD: "ChangeMe123!"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./schema.sql:/docker-entrypoint-initdb.d/schema.sql
+
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    environment:
+      DB_HOST: db
+      DB_NAME: sis
+      DB_USER: sis_user
+      DB_PASS: "ChangeMe123!"
+    depends_on:
+      - db
+
+volumes:
+  db_data:
